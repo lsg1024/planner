@@ -5,21 +5,21 @@
     <item
         android:id="@+id/actionSearch"
         android:icon="@drawable/ic_baseline_search_24"
-        android:title="@string/search"
+        android:title="Search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:iconTint="@color/white"
-        app:showAsAction="ifRoom|collapseActionView"/>
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/actionSort"
+        android:icon="@drawable/ic_baseline_sort_24"
+        android:title="Sort"
+        app:iconTint="@color/white"
+        app:showAsAction="always" />
 
-        <item
-            android:id="@+id/actionSort"
-            android:icon="@drawable/ic_baseline_sort_24"
-            android:title="@string/sort_data"
-            app:iconTint="@color/white"
-            app:showAsAction="ifRoom|collapseActionView"/>
-
-        <item
-            android:id="@+id/actionDeleteAll"
-            android:icon="@drawable/ic_baseline_delete_forever_24"
-            android:title="@string/delete_all_contacts"
-            app:iconTint="@color/white"
-            app:showAsAction="ifRoom|collapseActionView"/>
+    <item
+        android:id="@+id/actionDeleteAll"
+        android:icon="@drawable/ic_baseline_delete_forever_24"
+        android:title="Delete All"
+        app:iconTint="@color/white"
+        app:showAsAction="always" />
 </menu>

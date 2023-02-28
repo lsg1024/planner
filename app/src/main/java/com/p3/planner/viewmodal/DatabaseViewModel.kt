@@ -9,24 +9,71 @@ import com.p3.planner.repository.DatabaseRepository
 import com.p3.planner.utils.DataStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DatabaseViewModel @Inject constructor(private val repository: DatabaseRepository) : ViewModel(){
+class DatabaseViewModel @Inject constructor(private val repository: DatabaseRepository) : ViewModel() {
 
-    private val _contactList = MutableLiveData<DataStatus<List<ContactsEntity>>>()
-    val contactList : LiveData<DataStatus<List<ContactsEntity>>>
-    get() = _contactList
+    private val _contactsList = MutableLiveData<DataStatus<List<ContactsEntity>>>()
+    val contactsList : LiveData<DataStatus<List<ContactsEntity>>>
+        get() = _contactsList
 
-    fun saveContact(entity: ContactsEntity) = viewModelScope.launch {
-        repository.saveContact(entity)
+    private val _contactDetails = MutableLiveData<DataStatus<ContactsEntity>>()
+    val contactDetails :LiveData<DataStatus<ContactsEntity>>
+        get() = _contactDetails
+
+    init {
+        getAllContacts()
+    }
+
+    fun saveContact(isEdite: Boolean, entity: ContactsEntity) = viewModelScope.launch {
+        if (isEdite) {
+            repository.updateTask(entity)
+        } else {
+            repository.saveContact(entity)
+        }
+    }
+
+    fun deleteContact(entity: ContactsEntity) = viewModelScope.launch {
+        repository.deleteContact(entity)
+    }
+
+    fun deleteAllContacts() = viewModelScope.launch {
+        repository.deleteAllContacts()
     }
 
     fun getAllContacts() = viewModelScope.launch {
+        _contactsList.postValue(DataStatus.loading())
         repository.getAllContacts()
-            .catch { _contactList.postValue(DataStatus.error(it.message.toString())) }
-            .collect{_contactList.postValue(DataStatus.success(it, it.isEmpty()))}
+            .catch { _contactsList.postValue(DataStatus.error(it.message.toString())) }
+            .collect { _contactsList.postValue(DataStatus.success(it, it.isEmpty())) }
     }
+
+    fun getSortedListASC() = viewModelScope.launch {
+        _contactsList.postValue(DataStatus.loading())
+        repository.getSortedListASC()
+            .catch { _contactsList.postValue(DataStatus.error(it.message.toString())) }
+            .collect { _contactsList.postValue(DataStatus.success(it, it.isEmpty())) }
+    }
+
+    fun getSortedListDESC() = viewModelScope.launch {
+        _contactsList.postValue(DataStatus.loading())
+        repository.getSortedListDESC()
+            .catch { _contactsList.postValue(DataStatus.error(it.message.toString())) }
+            .collect { _contactsList.postValue(DataStatus.success(it, it.isEmpty())) }
+    }
+
+    fun getSearchContacts(name: String) = viewModelScope.launch {
+        repository.searchContact(name).collect() {
+            _contactsList.postValue(DataStatus.success(it, it.isEmpty()))
+        }
+    }
+
+    fun getDetailsContact(id: Int) = viewModelScope.launch {
+        repository.getDetailsContact(id).collect {
+            _contactDetails.postValue(DataStatus.success(it, false))
+        }
+    }
+
 }
