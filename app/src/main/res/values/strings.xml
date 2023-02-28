@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">planner</string>
+    <string name="sort_data">Sort Data</string>
+    <string name="delete_all_contacts">Delete All Contacts</string>
+    <string name="search">Search</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
